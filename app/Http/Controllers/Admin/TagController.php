@@ -26,7 +26,16 @@ class TagController extends Controller
      */
     public function create()
     {
-        return view('admin.tags.create');
+        $colors = [
+            'pink' => 'Color Rosa',
+            'red' => 'Color Rojo',
+            'purple' => 'Color Morado',
+            'yellow' => 'Color Amarillo',
+            'blue' => 'Color Azul',
+            'indigo' => 'Color Indigo',
+            'green' => 'Color Verde',
+        ];
+        return view('admin.tags.create', compact('colors'));
     }
 
     /**
@@ -37,7 +46,15 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'slug' => 'required | unique:tags',
+            'color' => 'required',
+        ]);
+        #Crear el nuevo registr
+        $tag = Tag::create($request->all());
+        return redirect()->route('admin.tags.edit', compact('tag'))->with('info', 'La etiqueta se creo con exito');
+
     }
 
     /**
@@ -59,7 +76,16 @@ class TagController extends Controller
      */
     public function edit(Tag $tag)
     {
-        return view('admin.tags.edit', compact('tag'));
+        $colors = [
+            'pink' => 'Color Rosa',
+            'red' => 'Color Rojo',
+            'purple' => 'Color Morado',
+            'yellow' => 'Color Amarillo',
+            'blue' => 'Color Azul',
+            'indigo' => 'Color Indigo',
+            'green' => 'Color Verde',
+        ];
+        return view('admin.tags.edit', compact('tag', 'colors'));
     }
 
     /**
@@ -71,7 +97,13 @@ class TagController extends Controller
      */
     public function update(Request $request, Tag $tag)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'slug' => "required | unique:tags,slug,$tag->id",
+            'color' => 'required',
+        ]);
+        $tag->update($request->all());
+        return redirect()->route('admin.tags.edit', $tag->id)->with('info', 'La etiqueta se actualizo con exito');
     }
 
     /**
@@ -82,6 +114,7 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        //
+        $tag->delete();
+        return redirect()->route('admin.tags.index')->with('info', 'La etiqueta se elimino con exito');
     }
 }
