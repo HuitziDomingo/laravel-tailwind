@@ -3,6 +3,7 @@
 @section('title', 'Panel Huitzi')
 
 @section('content_header')
+    <a href="{{route('admin.posts.create')}}" class="btn btn-primary float-right">Nuevo Post</a>
     <h1>Listado de Posts</h1>
 @stop
 
